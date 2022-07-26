@@ -1,0 +1,5 @@
+outs:
+- md5: dba2c08c8df0c8a356945d5efd123d05.dir
+  size: 159387292
+  nfiles: 4
+  path: stage00_data_ingestion
