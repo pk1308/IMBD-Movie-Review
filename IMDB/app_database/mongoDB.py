@@ -5,7 +5,6 @@ import pymongo
 
 from IMDB.app_logger import App_Logger
 from IMDB.app_exception.exception import App_Exception
-from IMDB.app_util.util import read_yaml_file
 
 load_dotenv()
 

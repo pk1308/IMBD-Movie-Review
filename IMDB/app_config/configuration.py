@@ -3,8 +3,7 @@ import sys
 import  os
 import pandas as pd
 
-from IMDB.app_entity.config_entity import DataIngestionConfig, DataValidationConfig, \
-    TrainingPipelineConfig, DataTransformationConfig, ModelTrainerConfig, ModelPusherConfig, ModelEvaluationConfig
+from IMDB.app_entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataTransformationConfig, ModelTrainerConfig, ModelPusherConfig, ModelEvaluationConfig
 from IMDB.app_exception.exception import App_Exception
 from IMDB.app_logger import App_Logger
 from IMDB.app_util.util import read_yaml_file
@@ -79,15 +78,36 @@ class Configuration:
         except Exception as e:
             raise App_Exception(e, sys) from e
 
-    def get_data_validation_config(self) -> DataValidationConfig:
-        try:
-            pass
-        except Exception as e:
-            raise App_Exception(e, sys) from e
-
+        
+    
     def get_data_transformation_config(self) -> DataTransformationConfig:
         try:
-            pass 
+            artifact_dir = self.pipeline_config.artifact_dir
+            data_transformation_config_info = self.config_info[DATA_TRANSFORMATION_CONFIG_KEY]
+            data_ingestion_config_info = self.config_info[DATA_INGESTION_CONFIG_KEY]
+            data_transformation_dir = data_transformation_config_info[DATA_TRANSFORMATION_DIR_KEY]
+            transformed_dir = data_transformation_config_info[DATA_TRANSFORMATION_DIR_NAME_KEY]
+            transformed_train_dir_name = data_transformation_config_info[DATA_TRANSFORMATION_TRAIN_DIR_NAME_KEY]
+            transformed_test_dir_name = data_transformation_config_info[DATA_TRANSFORMATION_TEST_DIR_NAME_KEY]
+            preprocessing_dir = data_transformation_config_info[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY]
+            preprocessed_obj_name = data_transformation_config_info[DATA_TRANSFORMATION_PREPROCESSED_FILE_NAME_KEY]
+            ingested_train_collection = data_ingestion_config_info[DATA_INGESTION_INGESTED_TRAIN_COLLECTION_KEY]
+            ingested_test_collection = data_ingestion_config_info[DATA_INGESTION_INGESTED_TEST_COLLECTION_KEY]
+            
+            transformed_train_dir = os.path.join(artifact_dir, data_transformation_dir, transformed_dir, transformed_train_dir_name , "train.npz")
+            transformed_test_dir = os.path.join(artifact_dir, data_transformation_dir, transformed_dir, transformed_test_dir_name, "test.npz")
+            preprocessed_obj_path = os.path.join(artifact_dir, data_transformation_dir, preprocessing_dir, preprocessed_obj_name)
+            
+            os.makedirs(os.path.dirname(transformed_train_dir), exist_ok=True)
+            os.makedirs(os.path.dirname(transformed_test_dir), exist_ok=True)
+
+            data_transformation_config = DataTransformationConfig(transformed_train_file_path = transformed_train_dir,
+                                                                   transformed_test_file_path = transformed_test_dir,
+                                                                   preprocessed_object_file_path = preprocessed_obj_path,
+                                                                   ingested_train_collection= ingested_train_collection,
+                                                                   ingested_test_collection= ingested_test_collection)
+            return data_transformation_config
+            
         except Exception as e:
             raise App_Exception(e, sys) from e
 

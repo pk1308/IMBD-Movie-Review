@@ -14,17 +14,8 @@ data_ingestion_config:
   ingested_data_Train_collection_name: ingested_train
   ingested_data_Test_collection_name: ingested_test
 
-
-data_validation_config:
-  data_validation_dir: stage01_data_validation
-  schema_dir: config
-  schema_file_name: schema.yaml
-  report_dir : report
-  report_file_name: report.json
-  report_page_file_name: report.html
-
 data_transformation_config:
-  data_transformation_dir: stage02_data_transformation
+  data_transformation_dir: stage01_data_transformation
   transformed_dir: transformed_data
   transformed_train_dir: train
   transformed_test_dir: test

@@ -21,5 +21,6 @@ nltk
 python-dotenv
 dvc 
 dvc[gdrive]
+wordcloud
 -e .
 

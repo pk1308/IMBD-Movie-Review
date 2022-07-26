@@ -1,5 +1,6 @@
 import yaml
 from IMDB.app_exception.exception import App_Exception
+from IMDB.app_database.mongoDB import MongoDB
 import os, sys
 import numpy as np
 import dill
@@ -85,6 +86,20 @@ def load_object(file_path: str):
     try:
         with open(file_path, "rb") as file_obj:
             return dill.load(file_obj)
+    except Exception as e:
+        raise App_Exception(e, sys) from e
+
+def load_data_from_mongodb(connection_0bj ):
+    """
+    connection_0bj: mongodb connection object
+    """
+    try:
+        data = connection_0bj.Find_Many( query={}, limit=4000 )
+        load_df = pd.DataFrame(data)
+        if "_id" in load_df.columns:
+            load_df.drop(columns=["_id"], inplace=True)
+            
+        return load_df 
     except Exception as e:
         raise App_Exception(e, sys) from e
 
