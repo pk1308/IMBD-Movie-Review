@@ -1,0 +1,5 @@
+outs:
+- md5: 5fde69d8f7d38ef70f58dd8e5472d902.dir
+  size: 72029950
+  nfiles: 3
+  path: stage01_data_transformation
