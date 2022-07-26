@@ -1,5 +1,5 @@
 import yaml
-from BigmartsalesPrediction.app_exception.exception import App_Exception
+from IMDB.app_exception.exception import App_Exception
 import os, sys
 import numpy as np
 import dill

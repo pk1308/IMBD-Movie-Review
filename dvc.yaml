@@ -1,0 +1,9 @@
+stages:
+  data_preparation:
+    cmd: python IMDB/app_src/stage_00_data_ingestion.py
+    deps:
+    - python IMDB/app_src/stage_00_data_ingestion.py
+    - python IMDB/app_config/configuration.py
+    - config/config.yaml
+    outs:
+    - artifacts/prepared

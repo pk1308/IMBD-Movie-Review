@@ -1,0 +1,51 @@
+training_pipeline_config:
+  pipeline_name: IMDB
+  artifact_dir: app_artifact
+
+data_ingestion_config:
+  data_ingestion_dir : stage00_data_ingestion
+  dataset_download_url: lakshmi25npathi/imdb-dataset-of-50k-movie-reviews 
+  dataset_download_file_name : imdb-dataset-of-50k-movie-reviews.zip
+  raw_data_dir: raw_data
+  raw_data_file_name: IMDB Dataset.csv
+  ingested_dir: ingested_data
+  ingested_data_Train_file_name: Train.csv
+  ingested_data_Test_file_name: Test.csv
+  ingested_data_Train_collection_name: ingested_train
+  ingested_data_Test_collection_name: ingested_test
+
+
+data_validation_config:
+  data_validation_dir: stage01_data_validation
+  schema_dir: config
+  schema_file_name: schema.yaml
+  report_dir : report
+  report_file_name: report.json
+  report_page_file_name: report.html
+
+data_transformation_config:
+  data_transformation_dir: stage02_data_transformation
+  transformed_dir: transformed_data
+  transformed_train_dir: train
+  transformed_test_dir: test
+  preprocessing_dir: preprocessed
+  preprocessed_object_file_name: preprocessed.pkl
+
+
+model_trainer_config:
+  model_trainer_dir: stage03_model_training
+  trained_model_dir: trained_model
+  model_file_name: model.pkl
+  base_accuracy: 0.5
+  model_config_dir: config
+  model_config_file_name: model.yaml
+  stack_status : true
+
+
+model_evaluation_config:
+  model_evaluation_dir: stage04_model_evaluation
+  model_evaluation_file_name: model_evaluation.yaml
+  
+
+model_pusher_config:
+  model_export_dir: saved_models
