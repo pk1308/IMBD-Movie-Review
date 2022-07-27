@@ -1,4 +1,4 @@
-from distutils.command.config import config
+
 import sys
 from nltk import data
 import numpy as np
@@ -8,6 +8,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import nltk
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelBinarizer
@@ -15,7 +16,6 @@ from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 import re
 from nltk.tokenize.toktok import ToktokTokenizer
-from scipy.sparse import hstack
 
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer

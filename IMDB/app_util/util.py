@@ -89,7 +89,7 @@ def load_object(file_path: str):
     except Exception as e:
         raise App_Exception(e, sys) from e
 
-def load_data_from_mongodb(connection_0bj ):
+def load_data_from_mongodb(connection_0bj , limit=4000):
     """
     connection_0bj: mongodb connection object
     """

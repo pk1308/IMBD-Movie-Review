@@ -1,9 +1,23 @@
 stages:
-  data_preparation:
+  stage_00_data_ingestion:
     cmd: python IMDB/app_src/stage_00_data_ingestion.py
     deps:
     - python IMDB/app_src/stage_00_data_ingestion.py
     - python IMDB/app_config/configuration.py
     - config/config.yaml
     outs:
-    - artifacts/prepared
+    - IMDB/app_artifact/stage00_data_ingestion/ingested_data/Test.csv
+    - IMDB/app_artifact/stage00_data_ingestion/ingested_data/Train.csv
+
+  stage_01_data_transformation:
+    cmd : python IMDB/app_src/stage_01_data_transformation.py
+    deps:
+    - python IMDB/app_src/stage_01_data_transformation.py
+    - python IMDB/app_config/configuration.py
+    - config/config.yaml
+    outs:
+    - IMDB/app_artifact/stage01_data_transformation/preprocessed/preprocessed.pkl
+    - IMDB/app_artifact/stage01_data_transformation/transformed_data/test/test.npz
+    - IMDB/app_artifact/stage01_data_transformation/transformed_data/train/train.npz
+
+  

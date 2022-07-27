@@ -112,8 +112,46 @@ class Configuration:
             raise App_Exception(e, sys) from e
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
+        
         try:
-            pass 
+            artifact_dir = self.pipeline_config.artifact_dir
+            data_transformation_config = self.get_data_transformation_config()
+            model_trainer_config_info = self.config_info[MODEL_TRAINER_CONFIG_KEY]
+            
+            model_trainer_dir = model_trainer_config_info[MODEL_TRAINER_ARTIFACT_DIR]
+            model_config_dir = model_trainer_config_info[MODEL_TRAINER_MODEL_CONFIG_DIR_KEY]
+            model_config_file_name = model_trainer_config_info[MODEL_TRAINER_MODEL_CONFIG_FILE_NAME_KEY]
+            base_accuracy = model_trainer_config_info[MODEL_TRAINER_BASE_ACCURACY_KEY]
+            trained_model_dir_name = model_trainer_config_info[MODEL_TRAINER_TRAINED_MODEL_DIR_KEY]
+            trained_model_file_name = model_trainer_config_info[MODEL_TRAINER_TRAINED_MODEL_FILE_NAME_KEY]
+            
+            transformed_train_file_path = data_transformation_config.transformed_train_file_path
+            transformed_test_file_path = data_transformation_config.transformed_test_file_path
+            preprocessed_object_file_path=data_transformation_config.preprocessed_object_file_path
+            
+            model_config_file_path = os.path.join(model_config_dir, model_config_file_name)
+            model_trainer_artifact_dir = os.path.join(
+                artifact_dir, model_trainer_dir)
+
+            trained_model_file_path = os.path.join(model_trainer_artifact_dir, trained_model_dir_name,
+                                                   trained_model_file_name)
+            
+            
+        
+
+            model_config_file_path = os.path.join(model_config_dir, model_config_file_name)
+            os.makedirs(os.path.dirname(trained_model_file_path), exist_ok=True)
+
+
+            model_trainer_config = ModelTrainerConfig(transformed_train_file_path= transformed_train_file_path,
+                                                      transformed_test_file_path= transformed_test_file_path,
+                                                      preprocessed_object_file_path= preprocessed_object_file_path,
+                                                      model_config_file_path= model_config_file_path,
+                                                      base_accuracy= base_accuracy,
+                                                      trained_model_file_path= trained_model_file_path)
+    
+            logging.info(f"Model trainer config: {model_trainer_config}")
+            return model_trainer_config
         except Exception as e:
             raise App_Exception(e, sys) from e
 

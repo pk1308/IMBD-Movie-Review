@@ -1,18 +1,16 @@
 
-from cmath import log
 import importlib
 import numpy as np
 import yaml
-from BigmartsalesPrediction.app_exception.exception import App_Exception
+from IMDB.app_exception.exception import App_Exception
 import os
 import sys
-from mlxtend.regressor import StackingCVRegressor
-from sklearn.ensemble import RandomForestRegressor
-from catboost import CatBoostRegressor
 from collections import namedtuple
 from typing import List
-from BigmartsalesPrediction.app_logger import logging
-from sklearn.metrics import r2_score, mean_squared_error
+from IMDB.app_logger import App_Logger
+from sklearn.metrics import precision_score , recall_score , f1_score 
+
+logging = App_Logger(__name__)
 
 GRID_SEARCH_KEY = 'grid_search'
 MODULE_KEY = 'module'
@@ -38,17 +36,13 @@ BestModel = namedtuple("BestModel", ["model_serial_number",
                                      "best_score", ])
 
 MetricInfoArtifact = namedtuple("MetricInfoArtifact",
-                                ["model_name", "model_object", "train_rmse", "test_rmse", "train_accuracy",
-                                 "test_accuracy", "model_accuracy", "index_number"])
+                                ["model_name", "model_object","train_precision", "test_precision",
+                                                          "train_recall", "test_recall",
+                                                          "train_f1" , "test_f1","model_accuracy", "index_number"])
 
 
 def evaluate_classification_model(model_list: list, X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray,
                                   y_test: np.ndarray, base_accuracy: float = 0.6) -> MetricInfoArtifact:
-    pass
-
-
-def evaluate_regression_model(model_list: list, X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray,
-                              y_test: np.ndarray, base_accuracy: float = 0.6) -> MetricInfoArtifact:
     """
     Description:
     This function compare multiple regression model return best model
@@ -61,11 +55,12 @@ def evaluate_regression_model(model_list: list, X_train: np.ndarray, y_train: np
     y_test: Testing dataset input feature
 
     return
-    It retured a named tuple
+    It returned a named tuple
     
-    MetricInfoArtifact = namedtuple("MetricInfo",
-                                ["model_name", "model_object", "train_rmse", "test_rmse", "train_accuracy",
-                                 "test_accuracy", "model_accuracy", "index_number"])
+    MetricInfoArtifact = namedtuple("MetricInfoArtifact",
+                                ["model_name", "model_object","train_precision", "test_precision",
+                                                          "train_recall", "test_recall",
+                                                          "train_f1" , "test_f1","model_accuracy", "index_number"])
 
     """
     try:
@@ -79,49 +74,126 @@ def evaluate_regression_model(model_list: list, X_train: np.ndarray, y_train: np
             # Getting prediction for training and testing dataset
             y_train_pred = model.predict(X_train)
             y_test_pred = model.predict(X_test)
-
-            # Calculating r squared score on training and testing dataset
-            train_acc = r2_score(y_train, y_train_pred)
-            test_acc = r2_score(y_test, y_test_pred)
-
-            # Calculating mean squared error on training and testing dataset
-            train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))
-            test_rmse = np.sqrt(mean_squared_error(y_test, y_test_pred))
-
-            # Calculating harmonic mean of train_accuracy and test_accuracy
-            model_accuracy = (2 * (train_acc * test_acc)) / (train_acc + test_acc)
-            diff_test_train_acc = abs(test_acc - train_acc)
-
-            # logging all important metric
+            
+            
+            # Calculating accuracy for training and testing dataset
+            train_precision = precision_score(y_train, y_train_pred)
+            test_precision = precision_score(y_test, y_test_pred)
+            
+            train_recall = recall_score(y_train, y_train_pred)
+            test_recall = recall_score(y_test, y_test_pred)
+            
+            train_f1 = f1_score(y_train, y_train_pred)
+            test_f1 = f1_score(y_test, y_test_pred)
+            
+            model_accuracy = (train_precision + test_precision + train_recall + test_recall + train_f1 + test_f1) / 6
+            diff_test_train_acc = abs(test_f1 - train_f1)
+            
             logging.info(f"{'>>' * 30} Score {'<<' * 30}")
-            logging.info(f"Train Score\t\t Test Score\t\t Average Score")
-            logging.info(f"{train_acc}\t\t {test_acc}\t\t{model_accuracy}")
-
-            logging.info(f"{'>>' * 30} Loss {'<<' * 30}")
-            logging.info(f"Diff test train accuracy: [{diff_test_train_acc}].")
-            logging.info(f"Train root mean squared error: [{train_rmse}].")
-            logging.info(f"Test root mean squared error: [{test_rmse}].")
-
-            # if model accuracy is greater than base accuracy and train and test score is within certain thershold
-            # we will accept that model as accepted model
-            if model_accuracy >= base_accuracy and diff_test_train_acc < 0.05:
-                base_accuracy = model_accuracy
-                metric_info_artifact = MetricInfoArtifact(model_name=model_name,
+            logging.info(f"Train Precision: {train_precision} ")
+            logging.info(f"Test Precision: {test_precision} ")
+            logging.info(f"Train Recall: {train_recall} ")
+            logging.info(f"Test Recall: {test_recall} ")
+            logging.info(f"Train F1: {train_f1} ")
+            logging.info(f"Test F1: {test_f1} ")
+            logging.info(f"Difference between test and train accuracy: {diff_test_train_acc} ")
+            
+            if model_accuracy > base_accuracy and  diff_test_train_acc < 0.05:
+                        base_accuracy = model_accuracy 
+                        metric_info_artifact = MetricInfoArtifact(model_name=model_name,
                                                           model_object=model,
-                                                          train_rmse=train_rmse,
-                                                          test_rmse=test_rmse,
-                                                          train_accuracy=train_acc,
-                                                          test_accuracy=test_acc,
+                                                          train_precision=train_precision,
+                                                          test_precision=test_precision,
+                                                          train_recall=train_recall,
+                                                          test_recall=test_recall,
+                                                          train_f1=train_f1,
+                                                          test_f1 = test_f1,
                                                           model_accuracy=model_accuracy,
                                                           index_number=index_number)
-
-                logging.info(f"Acceptable model found {metric_info_artifact}. ")
             index_number += 1
         if metric_info_artifact is None:
             logging.info(f"No model found with higher accuracy than base accuracy")
         return metric_info_artifact
     except Exception as e:
         raise App_Exception(e, sys) from e
+            
+
+
+# def evaluate_regression_model(model_list: list, X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray,
+#                               y_test: np.ndarray, base_accuracy: float = 0.6) -> MetricInfoArtifact:
+#     """
+#     Description:
+#     This function compare multiple regression model return best model
+
+#     Params:
+#     model_list: List of model
+#     X_train: Training dataset input feature
+#     y_train: Training dataset target feature
+#     X_test: Testing dataset input feature
+#     y_test: Testing dataset input feature
+
+#     return
+#     It retured a named tuple
+    
+#     MetricInfoArtifact = namedtuple("MetricInfo",
+#                                 ["model_name", "model_object", "train_rmse", "test_rmse", "train_accuracy",
+#                                  "test_accuracy", "model_accuracy", "index_number"])
+
+#     """
+#     try:
+
+#         index_number = 0
+#         metric_info_artifact = None
+#         for model in model_list:
+#             model_name = str(model)  # getting model name based on model object
+#             logging.info(f"{'>>' * 30}Started evaluating model: [{type(model).__name__}] {'<<' * 30}")
+
+#             # Getting prediction for training and testing dataset
+#             y_train_pred = model.predict(X_train)
+#             y_test_pred = model.predict(X_test)
+
+#             # Calculating r squared score on training and testing dataset
+#             train_acc = r2_score(y_train, y_train_pred)
+#             test_acc = r2_score(y_test, y_test_pred)
+
+#             # Calculating mean squared error on training and testing dataset
+#             train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))
+#             test_rmse = np.sqrt(mean_squared_error(y_test, y_test_pred))
+
+#             # Calculating harmonic mean of train_accuracy and test_accuracy
+#             model_accuracy = (2 * (train_acc * test_acc)) / (train_acc + test_acc)
+#             diff_test_train_acc = abs(test_acc - train_acc)
+
+#             # logging all important metric
+#             logging.info(f"{'>>' * 30} Score {'<<' * 30}")
+#             logging.info(f"Train Score\t\t Test Score\t\t Average Score")
+#             logging.info(f"{train_acc}\t\t {test_acc}\t\t{model_accuracy}")
+
+#             logging.info(f"{'>>' * 30} Loss {'<<' * 30}")
+#             logging.info(f"Diff test train accuracy: [{diff_test_train_acc}].")
+#             logging.info(f"Train root mean squared error: [{train_rmse}].")
+#             logging.info(f"Test root mean squared error: [{test_rmse}].")
+
+#             # if model accuracy is greater than base accuracy and train and test score is within certain thershold
+#             # we will accept that model as accepted model
+#             if model_accuracy >= base_accuracy and diff_test_train_acc < 0.05:
+#                 base_accuracy = model_accuracy
+#                 metric_info_artifact = MetricInfoArtifact(model_name=model_name,
+#                                                           model_object=model,
+#                                                           train_rmse=train_rmse,
+#                                                           test_rmse=test_rmse,
+#                                                           train_accuracy=train_acc,
+#                                                           test_accuracy=test_acc,
+#                                                           model_accuracy=model_accuracy,
+#                                                           index_number=index_number)
+
+#                 logging.info(f"Acceptable model found {metric_info_artifact}. ")
+#             index_number += 1
+#         if metric_info_artifact is None:
+#             logging.info(f"No model found with higher accuracy than base accuracy")
+#         return metric_info_artifact
+#     except Exception as e:
+#         raise App_Exception(e, sys) from e
 
 
 def get_sample_model_config_yaml_file(export_dir: str):
@@ -378,12 +450,3 @@ class ModelFactory:
                                                                                   base_accuracy=base_accuracy)
         except Exception as e:
             raise App_Exception(e, sys)
-    def get_stacked_model(self,model_list_to_stack :list ,X, y):
-        try:
-            meta_regressor_rf = CatBoostRegressor(depth =  4, iterations =  100, l2_leaf_reg=0.4, learning_rate = 0.1)
-            stacked_model = StackingCVRegressor(regressors=model_list_to_stack,meta_regressor =meta_regressor_rf)
-            stacked_model.fit(X, y)
-            logging.info(f"Stacked model: {stacked_model}")
-            return stacked_model
-        except Exception as e:
-            raise App_Exception(e, sys) from e

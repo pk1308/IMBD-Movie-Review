@@ -14,9 +14,11 @@ DataTransformationConfig = namedtuple("DataTransformationConfig", ["transformed_
                                                                    "ingested_train_collection" , 
                                                                    'ingested_test_collection'])
 
-ModelTrainerConfig = namedtuple("ModelTrainerConfig",
-                                ["trained_model_file_path", "base_accuracy", "model_config_file_path",
-                                 "stacked"])
+ModelTrainerConfig = namedtuple("ModelTrainerConfig",["transformed_train_file_path",
+                                                      "transformed_test_file_path",
+                                                       "preprocessed_object_file_path",
+                                                       "model_config_file_path",
+                                                       "base_accuracy","trained_model_file_path"])
 
 ModelEvaluationConfig = namedtuple("ModelEvaluationConfig", ["model_evaluation_file_path", 
                                                              "saved_model_dir" , "time_stamp"])
