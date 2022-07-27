@@ -1,0 +1,4 @@
+outs:
+- md5: 709abc8880b3c3e0d9bbfeebcd9d33b2
+  size: 26962657
+  path: imdb-dataset-of-50k-movie-reviews.zip
