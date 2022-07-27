@@ -10,7 +10,7 @@ stages:
       md5: e8dcfba2bef944f586022b9839cfbeb1
       size: 5781
     - path: config/config.yaml
-      md5: 7158fe079031659cc452cf19c5899b98
+      md5: d995b622b19c4296975bdb45d6c0ba5b
       size: 1243
     outs:
     - path: IMDB/app_artifact/stage00_data_ingestion/ingested_data/Test.csv
@@ -26,18 +26,40 @@ stages:
       md5: b0e92893f604c795fcfb93b578a08b39
       size: 10315
     - path: IMDB/app_src/stage_01_data_transformation.py
-      md5: a7607bbc3f824eb4a9d916f771a4bbfd
-      size: 8494
+      md5: e4dc18ab84ae99c4685c411c409c2625
+      size: 8545
     - path: config/config.yaml
-      md5: 7158fe079031659cc452cf19c5899b98
+      md5: d995b622b19c4296975bdb45d6c0ba5b
       size: 1243
     outs:
     - path: IMDB/app_artifact/stage01_data_transformation/preprocessed/preprocessed.pkl
-      md5: 9fe6cba58a7712d5b33dd3abf01badc0
-      size: 51002484
+      md5: 8717684166d3037a512b576f5b6cf621
+      size: 20619801
     - path: IMDB/app_artifact/stage01_data_transformation/transformed_data/test/test.npz
-      md5: 3c8a0c1d2280b1e8e731db800c06a4d5
-      size: 1866869
+      md5: 8cb80363a78e815cf38f8162ccc125e4
+      size: 5952917
     - path: IMDB/app_artifact/stage01_data_transformation/transformed_data/train/train.npz
-      md5: e30d9dcae5da2d9c06e4a31b0a8345a7
-      size: 19160597
+      md5: 88ee5dba8177019393bb084d34b1340d
+      size: 8932229
+  stage_02_model_trainer:
+    cmd: python3 IMDB/app_src/stage_02_model_trainer.py
+    deps:
+    - path: IMDB/app_config/configuration.py
+      md5: b0e92893f604c795fcfb93b578a08b39
+      size: 10315
+    - path: IMDB/app_entity/model_factory.py
+      md5: a726afcdb8f421ffb2c7d7305d6ea50f
+      size: 22208
+    - path: IMDB/app_src/stage_02_model_trainer.py
+      md5: 18119a46c5ec134e2259d30e7262ce77
+      size: 7954
+    - path: config/config.yaml
+      md5: d995b622b19c4296975bdb45d6c0ba5b
+      size: 1243
+    - path: config/model.yaml
+      md5: 44bac80d442090f32a8d17b898ace903
+      size: 303
+    outs:
+    - path: IMDB/app_artifact/stage02_model_training/trained_model/model.pkl
+      md5: 5b43e6a69a4b8c378760b26edfb4fb5d
+      size: 86104403

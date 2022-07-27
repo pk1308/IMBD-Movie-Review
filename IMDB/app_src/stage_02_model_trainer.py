@@ -29,7 +29,7 @@ logging = App_Logger(__name__)
 
 
 class EstimatorModel:
-    def __init__(self, preprocessing_object, trained_model_object):
+    def __init__(self, preprocessing_object, trained_model_object , label_binarizer_object):
         """
         TrainedModel constructor
         preprocessing_object: preprocessing_object
@@ -37,6 +37,7 @@ class EstimatorModel:
         """
         self.preprocessing_object = preprocessing_object
         self.trained_model_object = trained_model_object
+        self.label_binarizer_object = label_binarizer_object
 
     def predict(self, X):
         """
@@ -45,7 +46,8 @@ class EstimatorModel:
         At last it perform prediction on transformed features
         """
         transformed_feature = self.preprocessing_object.transform(X)
-        return self.trained_model_object.predict(transformed_feature)
+        predicted = self.trained_model_object.predict(transformed_feature)
+        return self.label_binarizer_object.inverse_transform(predicted)
 
     def __repr__(self):
         return f"{type(self.trained_model_object).__name__}()"
@@ -89,8 +91,8 @@ class ModelTrainer:
             logging.info(f"input :{input_feature_train_df.shape}")
             logging.info(f"lable : {target_feature_train_df.shape}")
 
-            label_binarizer = LabelBinarizer()
-            target_feature = label_binarizer.fit_transform(target_feature_train_df)
+            label_binarizer_object = LabelBinarizer()
+            target_feature = label_binarizer_object.fit_transform(target_feature_train_df)
             
             preprocessing_obj = load_object(file_path=preprocessed_object_file_path)
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
@@ -129,16 +131,18 @@ class ModelTrainer:
             model_object = metric_info.model_object
 
         
-            trained_model_estimator = EstimatorModel(preprocessing_object=preprocessing_obj, trained_model_object=model_object)
+            trained_model_estimator = EstimatorModel(preprocessing_object=preprocessing_obj, 
+                                                     trained_model_object=model_object ,
+                                                     label_binarizer_object=label_binarizer_object)
             logging.info(f"Saving model at path: {trained_model_file_path}")
             save_object(file_path=trained_model_file_path, obj=trained_model_estimator)
 
             model_trainer_artifact = ModelTrainerArtifact(is_trained=True, message="Model Trained successfully",
                                                           trained_model_file_path=trained_model_file_path,
-                                                          train_rmse=metric_info.train_f1,
-                                                          test_rmse=metric_info.test_f1,
-                                                          train_accuracy=metric_info.train_precision,
-                                                          test_accuracy=metric_info.test_precision,
+                                                          train_f1=metric_info.train_f1,
+                                                          test_f1=metric_info.test_f1,
+                                                          train_precision=metric_info.train_precision,
+                                                          test_precision=metric_info.test_precision,
                                                           model_accuracy=metric_info.model_accuracy
 
                                                           )

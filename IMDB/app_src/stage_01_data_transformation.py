@@ -116,10 +116,10 @@ class DataTransformation:
             review_column = 'review'
             feature_pipeline_cv = Pipeline( steps = [
                     ('feature_generator' , FeatureGenerator()),
-                    ('CountVectorizer', CountVectorizer(min_df=0,max_df=1,binary=False,ngram_range=(1,3)))])
+                    ('CountVectorizer', CountVectorizer(min_df=0,max_df=1,binary=False,ngram_range=(1,2), max_features= 150000))])
             feature_pipeline_tf = Pipeline( steps = [
                     ('feature_generator' , FeatureGenerator()),
-                    ('TfidfVectorizer', TfidfVectorizer(min_df=0,max_df=1,use_idf=True,ngram_range=(1,3)))])
+                    ('TfidfVectorizer', TfidfVectorizer(stop_words='english', ngram_range=(1, 2), lowercase=True, max_features=150000))])
             
             preprocessing = ColumnTransformer([('feature_generator_cv', feature_pipeline_cv, review_column),
                     ('feature_generator_tv', feature_pipeline_tf, review_column) ])

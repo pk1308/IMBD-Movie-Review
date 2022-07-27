@@ -79,10 +79,10 @@ def evaluate_classification_model(model_list: list, X_train: np.ndarray, y_train
             
             # Calculating accuracy for training and testing dataset
             train_precision = precision_score(y_train, y_train_pred)
-            test_precision = precision_score(y_test, y_test_pred)
+            test_precision = precision_score(y_test , y_test_pred)
             
             train_recall = recall_score(y_train, y_train_pred)
-            test_recall = recall_score(y_test, y_test_pred)
+            test_recall = recall_score(y_test , y_test_pred)
             
             train_f1 = f1_score(y_train, y_train_pred)
             test_f1 = f1_score(y_test, y_test_pred)

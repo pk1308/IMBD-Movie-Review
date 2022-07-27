@@ -12,3 +12,5 @@ model_selection:
     module: sklearn.ensemble
     class: RandomForestClassifier
     search_param_grid:
+        n_estimators: [100, 200]
+        max_depth: [ 7, 8, 9, 10]
