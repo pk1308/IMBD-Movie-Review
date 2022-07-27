@@ -1,0 +1,43 @@
+schema: '2.0'
+stages:
+  stage_00_data_ingestion:
+    cmd: python3 IMDB/app_src/stage_00_data_ingestion.py
+    deps:
+    - path: IMDB/app_config/configuration.py
+      md5: b0e92893f604c795fcfb93b578a08b39
+      size: 10315
+    - path: IMDB/app_src/stage_00_data_ingestion.py
+      md5: e8dcfba2bef944f586022b9839cfbeb1
+      size: 5781
+    - path: config/config.yaml
+      md5: 7158fe079031659cc452cf19c5899b98
+      size: 1243
+    outs:
+    - path: IMDB/app_artifact/stage00_data_ingestion/ingested_data/Test.csv
+      md5: 44ecba70ddd5c92f91dc6928959d58d8
+      size: 13197951
+    - path: IMDB/app_artifact/stage00_data_ingestion/ingested_data/Train.csv
+      md5: b6d3b6c901cda4827010217a63ffd315
+      size: 53014375
+  stage_01_data_transformation:
+    cmd: python3 IMDB/app_src/stage_01_data_transformation.py
+    deps:
+    - path: IMDB/app_config/configuration.py
+      md5: b0e92893f604c795fcfb93b578a08b39
+      size: 10315
+    - path: IMDB/app_src/stage_01_data_transformation.py
+      md5: a7607bbc3f824eb4a9d916f771a4bbfd
+      size: 8494
+    - path: config/config.yaml
+      md5: 7158fe079031659cc452cf19c5899b98
+      size: 1243
+    outs:
+    - path: IMDB/app_artifact/stage01_data_transformation/preprocessed/preprocessed.pkl
+      md5: 9fe6cba58a7712d5b33dd3abf01badc0
+      size: 51002484
+    - path: IMDB/app_artifact/stage01_data_transformation/transformed_data/test/test.npz
+      md5: 3c8a0c1d2280b1e8e731db800c06a4d5
+      size: 1866869
+    - path: IMDB/app_artifact/stage01_data_transformation/transformed_data/train/train.npz
+      md5: e30d9dcae5da2d9c06e4a31b0a8345a7
+      size: 19160597
