@@ -94,7 +94,7 @@ def load_data_from_mongodb(connection_0bj , limit=4000):
     connection_0bj: mongodb connection object
     """
     try:
-        data = connection_0bj.Find_Many( query={}, limit=4000 )
+        data = connection_0bj.Find_Many( query={}, limit=limit)
         load_df = pd.DataFrame(data)
         if "_id" in load_df.columns:
             load_df.drop(columns=["_id"], inplace=True)

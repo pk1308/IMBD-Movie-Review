@@ -1,5 +1,6 @@
 
 import importlib
+from nltk.corpus.reader.chasen import test
 import numpy as np
 import yaml
 from IMDB.app_exception.exception import App_Exception
@@ -86,7 +87,7 @@ def evaluate_classification_model(model_list: list, X_train: np.ndarray, y_train
             train_f1 = f1_score(y_train, y_train_pred)
             test_f1 = f1_score(y_test, y_test_pred)
             
-            model_accuracy = (train_precision + test_precision + train_recall + test_recall + train_f1 + test_f1) / 6
+            model_accuracy = test_f1
             diff_test_train_acc = abs(test_f1 - train_f1)
             
             logging.info(f"{'>>' * 30} Score {'<<' * 30}")

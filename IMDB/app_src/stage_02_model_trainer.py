@@ -78,7 +78,7 @@ class ModelTrainer:
 
 
             logging.info(f"Loading training and test data as pandas dataframe.")
-            train_df = load_data_from_mongodb(train_conn)
+            train_df = load_data_from_mongodb(train_conn , limit=40000)
 
 
             target_column_name = "sentiment"
@@ -86,12 +86,14 @@ class ModelTrainer:
             logging.info(f"Splitting input and target feature from training and testing dataframe.")
             input_feature_train_df = train_df.drop(columns=[target_column_name], axis=1)
             target_feature_train_df = train_df[target_column_name]
+            logging.info(f"input :{input_feature_train_df.shape}")
+            logging.info(f"lable : {target_feature_train_df.shape}")
 
             label_binarizer = LabelBinarizer()
             target_feature = label_binarizer.fit_transform(target_feature_train_df)
             
             preprocessing_obj = load_object(file_path=preprocessed_object_file_path)
-            input_feature_train_arr = preprocessing_obj.transform(input_feature_train_df)
+            input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
 
 
             logging.info(f"Splitting training and testing input and target feature")
@@ -118,10 +120,12 @@ class ModelTrainer:
             metric_info: MetricInfoArtifact = evaluate_classification_model(model_list=model_list, X_train=X_train,
                                                                         y_train=y_train, X_test=X_test, y_test=y_test,
                                                                         base_accuracy=base_accuracy)
+            if metric_info.model_object is None:
+                raise App_Exception("Best model not found")
 
             logging.info(f"Best found model on both training and testing dataset.")
 
-            preprocessing_obj = load_object(file_path=preprocessed_object_file_path)
+
             model_object = metric_info.model_object
 
         
