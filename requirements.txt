@@ -4,17 +4,13 @@ gunicorn
 sklearn
 pandas
 PyYAML
-evidently
 dill
 matplotlib
 kaggle
-loguru
 xgboost
-catboost
 mlxtend 
 pymongo
 pymongo[srv]
-kneed
 beautifulsoup4
 seaborn
 nltk
