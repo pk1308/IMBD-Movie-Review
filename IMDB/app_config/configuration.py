@@ -1,9 +1,11 @@
 
+from pyexpat import model
+from statistics import mode
 import sys
 import  os
 import pandas as pd
 
-from IMDB.app_entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataTransformationConfig, ModelTrainerConfig, ModelPusherConfig, ModelEvaluationConfig
+from IMDB.app_entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataTransformationConfig, ModelTrainerConfig,ModelEvaluationConfig
 from IMDB.app_exception.exception import App_Exception
 from IMDB.app_logger import App_Logger
 from IMDB.app_util.util import read_yaml_file
@@ -157,12 +159,30 @@ class Configuration:
 
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
         try:
-            pass 
+            artifact_dir = self.pipeline_config.artifact_dir
+            model_evaluation_config_info = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
+            data_ingestion_config = self.get_data_ingestion_config()
+            model_trainer_config = self.get_model_trainer_config()
+            model_evaluation_dir_name = model_evaluation_config_info[MODEL_EVALUATION_ARTIFACT_DIR]
+            model_evaluation_dir = os.path.join(artifact_dir, model_evaluation_dir_name)
+            os.makedirs(model_evaluation_dir, exist_ok=True)
+            timestamp = CURRENT_TIME_STAMP
+            model_name = model_trainer_config.trained_model_file_path.split("/")[-1]
+            model_evaluated_file_path = os.path.join(artifact_dir, model_evaluation_dir, timestamp,model_name)
+            
+            model_evaluation_collection = data_ingestion_config.ingested_test_collection
+            trained_model_path = model_trainer_config.trained_model_file_path
+    
+            response = ModelEvaluationConfig(model_evaluation_collection=model_evaluation_collection,
+                                              trained_model_path=trained_model_path,
+                                              model_evaluated_file_path=model_evaluated_file_path ,
+                                              model_evaluation_dir=model_evaluation_dir)
+            return response
         except Exception as e:
             raise App_Exception(e, sys) from e
 
-    def get_model_pusher_config(self) -> ModelPusherConfig:
-        try:
-            pass 
-        except Exception as e:
-            raise App_Exception(e, sys) from e
+    # def get_model_pusher_config(self) -> ModelPusherConfig:
+    #     try:
+    #         pass 
+    #     except Exception as e:
+    #         raise App_Exception(e, sys) from e

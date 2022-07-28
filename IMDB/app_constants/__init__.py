@@ -21,17 +21,6 @@ TRAINING_PIPELINE_ARTIFACT_DIR_KEY = "artifact_dir"
 TRAINING_PIPELINE_NAME_KEY = "pipeline_name"
 
 
-#   data_ingestion_dir : stage00_data_ingestion
-#   dataset_download_url: lakshmi25npathi/imdb-dataset-of-50k-movie-reviews 
-#   dataset_download_file_name : imdb-dataset-of-50k-movie-reviews.zip
-#   raw_data_dir: raw_data
-#   raw_data_file_name: IMDB Dataset.csv
-#   ingested_dir: ingested_data
-#   ingested_data_Train_file_name: Train.csv
-#   ingested_data_Test_file_name: Test.csv
-#   ingested_data_Train_collection_name: ingested_train
-#   ingested_data_Test_collection_name: ingested_test
-
 # Data Ingestion related variable
 DATA_INGESTION_CONFIG_KEY = "data_ingestion_config"
 DATA_INGESTION_DIR_KEY = "data_ingestion_dir"
@@ -65,5 +54,10 @@ MODEL_TRAINER_TRAINED_MODEL_FILE_NAME_KEY = "model_file_name"
 MODEL_TRAINER_BASE_ACCURACY_KEY = "base_accuracy"
 MODEL_TRAINER_MODEL_CONFIG_DIR_KEY = "model_config_dir"
 MODEL_TRAINER_MODEL_CONFIG_FILE_NAME_KEY = "model_config_file_name"
+
+
+# Model Evaluation related variables
+MODEL_EVALUATION_CONFIG_KEY = 'model_evaluation_config'
+MODEL_EVALUATION_ARTIFACT_DIR = 'model_evaluation_dir'
 
 

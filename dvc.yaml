@@ -30,3 +30,13 @@ stages:
     - config/model.yaml
     outs:
     - IMDB/app_artifact/stage02_model_training/trained_model/model.pkl
+  
+  stage_03_model_evaluation:
+    cmd: python3 IMDB/app_src/stage_03_model_evaluation.py
+    deps:
+    - IMDB/app_src/stage_03_model_evaluation.py
+    - IMDB/app_config/configuration.py
+    - config/config.yaml
+    - IMDB/app_artifact/stage02_model_training/trained_model/model.pkl
+    outs:
+    - IMDB/app_artifact/stage03_model_evaluation/

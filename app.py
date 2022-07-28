@@ -5,7 +5,8 @@ from flask import Flask, request , render_template , jsonify
 import sys
 import os
 import pandas as pd
-from sklearn import preprocessing 
+from sklearn import preprocessing
+from IMDB.app_constants import ROOT_DIR 
 from IMDB.app_util.util import load_object, save_object
 from IMDB.app_exception.exception import App_Exception
 from nltk.tokenize.toktok import ToktokTokenizer
@@ -16,8 +17,9 @@ import nltk
 nltk.download('stopwords')
 
 
-
-TRAINED_MODEL_PATH = 'production_model/model.pkl'
+ROOT_DIR = ROOT_DIR = os.getcwd()
+TRAINED_MODEL_dir = os.path.join(ROOT_DIR, 'trained_model')
+TRAINED_MODEL_PATH = os.path.join(TRAINED_MODEL_dir, 'model.pkl')
 
 
 app = Flask(__name__)
