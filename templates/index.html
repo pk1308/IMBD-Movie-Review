@@ -1,13 +1,11 @@
-<p>{% extends 'base.html' %} {% block head %} {% endblock %} {% block body %}</p>
-    <div class="contemt">
-<h1>Review Prediction</h1>
-</div>
-<form action="/" method="post">
-    <p><label for="Temperature">Please enter your Review:-</label><input name="review" type="text" 
-        id="predict"  /></p>
-    <button type="submit" value="&quot;Predict">Predict</button></p>
-</form>
-
-
-<p><strong><a href="https://github.com/pk1308/IMBD-Movie-Review">[source]</a></strong></p>
-{% endblock %}</p>
+<div>
+    <h1 style="text-align: center;">Review Prediction</h1>
+    </div>
+    <form action="/" method="post">
+    <p style="text-align: center;"><label for="Temperature">Please enter your Review:</label></p>
+    <p style="text-align: center;"><textarea id="review" cols="50" name="review" rows="4">
+    </textarea></p>
+    <p style="text-align: center;"><button type="submit" value="&quot;Predict">Predict</button></p>
+    </form>
+    <p style="text-align: center;"><strong><a href="https://github.com/pk1308/IMBD-Movie-Review">[source]</a></strong></p>
+    <p style="text-align: center;">&nbsp;</p>

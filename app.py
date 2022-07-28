@@ -18,7 +18,7 @@ nltk.download('stopwords')
 
 
 ROOT_DIR = ROOT_DIR = os.getcwd()
-TRAINED_MODEL_dir = os.path.join(ROOT_DIR, 'trained_model')
+TRAINED_MODEL_dir = os.path.join(ROOT_DIR, 'production_model')
 TRAINED_MODEL_PATH = os.path.join(TRAINED_MODEL_dir, 'model.pkl')
 
 
@@ -37,9 +37,9 @@ def index():
             transformed_feature = model.preprocessing_object.transform(X)
             predicted = model.trained_model_object.predict(transformed_feature)
             prediction = model.label_binarizer_object.inverse_transform(predicted).tolist()[0]
-            return jsonify({"Prediction" : prediction})
-        else:
-            return render_template('index.html')
+            response = jsonify({review  : prediction})
+            return response
+        return render_template('index.html')
     except Exception as e:
         return str(e)
 
