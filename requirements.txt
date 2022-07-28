@@ -18,5 +18,6 @@ python-dotenv
 dvc 
 dvc[gdrive]
 wordcloud
+scipy
 -e .
 
