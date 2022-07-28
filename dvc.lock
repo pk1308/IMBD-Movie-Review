@@ -23,14 +23,14 @@ stages:
     cmd: python3 IMDB/app_src/stage_01_data_transformation.py
     deps:
     - path: IMDB/app_config/configuration.py
-      md5: b0e92893f604c795fcfb93b578a08b39
-      size: 10315
+      md5: 698fee97b75d51f54f6d9169dc38ebd2
+      size: 11705
     - path: IMDB/app_src/stage_01_data_transformation.py
       md5: e4dc18ab84ae99c4685c411c409c2625
       size: 8545
     - path: config/config.yaml
-      md5: d995b622b19c4296975bdb45d6c0ba5b
-      size: 1243
+      md5: 9c28e6c2b96ddd945823c148a39fa63f
+      size: 1191
     outs:
     - path: IMDB/app_artifact/stage01_data_transformation/preprocessed/preprocessed.pkl
       md5: 8717684166d3037a512b576f5b6cf621
@@ -45,8 +45,8 @@ stages:
     cmd: python3 IMDB/app_src/stage_02_model_trainer.py
     deps:
     - path: IMDB/app_config/configuration.py
-      md5: b0e92893f604c795fcfb93b578a08b39
-      size: 10315
+      md5: 698fee97b75d51f54f6d9169dc38ebd2
+      size: 11705
     - path: IMDB/app_entity/model_factory.py
       md5: a726afcdb8f421ffb2c7d7305d6ea50f
       size: 22208
@@ -54,8 +54,8 @@ stages:
       md5: 18119a46c5ec134e2259d30e7262ce77
       size: 7954
     - path: config/config.yaml
-      md5: d995b622b19c4296975bdb45d6c0ba5b
-      size: 1243
+      md5: 9c28e6c2b96ddd945823c148a39fa63f
+      size: 1191
     - path: config/model.yaml
       md5: 44bac80d442090f32a8d17b898ace903
       size: 303
@@ -80,6 +80,6 @@ stages:
       size: 1191
     outs:
     - path: IMDB/app_artifact/stage03_model_evaluation/
-      md5: 3773debec3b24065028819027a7f40ed.dir
-      size: 86104500
-      nfiles: 1
+      md5: 8cf18f8ea7fbc9515b7cfb40c0b92996.dir
+      size: 172209002
+      nfiles: 2
