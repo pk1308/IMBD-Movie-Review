@@ -1,13 +1,19 @@
+
 import yaml
 from IMDB.app_exception.exception import App_Exception
 from IMDB.app_database.mongoDB import MongoDB
-import os, sys
+from IMDB.app_logger import App_Logger
 import numpy as np
 import dill
 import pandas as pd
+import boto3
+import botocore
+import os 
+
+S3_BUCKET_NAME = "pk1308mlproject"
 
 
-# from housing.constant import *
+logging = App_Logger(__name__)
 
 
 def write_yaml_file(file_path: str, data: dict = None):
@@ -103,25 +109,23 @@ def load_data_from_mongodb(connection_0bj , limit=4000):
     except Exception as e:
         raise App_Exception(e, sys) from e
 
-# def load_data(file_path: str, schema_file_path: str) -> pd.DataFrame:
-#     try:
-#         dataset_schema = read_yaml_file(schema_file_path)
+def s3_download_model(path : str , key_name : str):
+    try:
+        session = boto3.Session(
+        aws_access_key_id= os.environ['AWS_ACCESS_KEY'],
+        aws_secret_access_key=os.environ['AWS_ACCESS_SECRET']
+        )   
+        #Creating S3 Resource From the Session.
+        s3 = session.resource('s3')
+        bucket = s3.Bucket(S3_BUCKET_NAME)
+        obj = bucket.objects.filter()
+        file_key = [i for i in obj if key_name in i.key][0]
+        bucket.download_file(file_key.key, path) # save to same path
+        logging.info("Downloaded Model From S3")
 
-#         schema = dataset_schema[DATASET_SCHEMA_COLUMNS_KEY]
-
-#         dataframe = pd.read_csv(file_path)
-
-#         error_message = ""
-
-
-#         for column in dataframe.columns:
-#             if column in list(schema.keys()):
-#                 dataframe[column].astype(schema[column])
-#             else:
-#                 error_message = f"{error_message} \nColumn: [{column}] is not in the schema."
-#         if len(error_message) > 0:
-#             raise Exception(error_message)
-#         return dataframe
-
-#     except Exception as e:
-#         raise App_Exception(e,sys) from e
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            print("The object does not exist.")
+        else:
+            raise App_Exception(e, sys) from e
+        

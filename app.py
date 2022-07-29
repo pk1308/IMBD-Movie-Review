@@ -1,4 +1,4 @@
-from cmath import log
+
 from json import load
 import re
 from flask import Flask, request , render_template , jsonify
@@ -7,9 +7,10 @@ import os
 import pandas as pd
 from sklearn import preprocessing
 from IMDB.app_constants import ROOT_DIR 
-from IMDB.app_util.util import load_object, save_object
+from IMDB.app_util.util import load_object, save_object , s3_download_model
 from IMDB.app_exception.exception import App_Exception
 from nltk.tokenize.toktok import ToktokTokenizer
+
 import logging
 from bs4 import BeautifulSoup
 import re 
@@ -20,6 +21,9 @@ nltk.download('stopwords')
 ROOT_DIR = ROOT_DIR = os.getcwd()
 TRAINED_MODEL_dir = os.path.join(ROOT_DIR, 'production_model')
 TRAINED_MODEL_PATH = os.path.join(TRAINED_MODEL_dir, 'model.pkl')
+os.makedirs(TRAINED_MODEL_dir, exist_ok=True)
+if not os.path.exists(TRAINED_MODEL_PATH):
+    s3_download_model(path = TRAINED_MODEL_PATH, key_name="best_model")
 
 
 app = Flask(__name__)

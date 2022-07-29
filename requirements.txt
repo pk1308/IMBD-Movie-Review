@@ -5,19 +5,9 @@ sklearn
 pandas
 PyYAML
 dill
-matplotlib
 kaggle
-xgboost
-mlxtend 
-pymongo
-pymongo[srv]
 beautifulsoup4
-seaborn
 nltk
-python-dotenv
-dvc 
-dvc[gdrive]
-wordcloud
-scipy
+boto3
 -e .
 

@@ -132,3 +132,5 @@ dmypy.json
 Notebook/*
 
 .vscode/
+
+production_model

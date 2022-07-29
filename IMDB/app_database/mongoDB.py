@@ -1,12 +1,11 @@
 import os
 import sys
-from dotenv import load_dotenv
 import pymongo
 
 from IMDB.app_logger import App_Logger
 from IMDB.app_exception.exception import App_Exception
 
-load_dotenv()
+
 
 
 CONNECTION_STRING = os.getenv('MONGODB_CONNSTRING')
