@@ -9,5 +9,6 @@ kaggle
 beautifulsoup4
 nltk
 boto3
+pymongo
 -e .
 
